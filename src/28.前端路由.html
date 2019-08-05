@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../vue.js"></script>
+
+<!--   1. 安装 vue-router 路由模块-->
+    <script src="../vue-router-3.0.6.js"></script>
+<!--    导入这个包,url里会自动在末尾多 "#/"-->
+
+    <style>
+/*<!--       默认被激活的路由连接类就是 ".router-link-active"-->*/
+/*  改变的话,在 router 构造函数里,把 "linkActiveClass" 属性设为 ClassName 即可*/
+        .router-link-active{
+            color: red;
+            font-weight: 800;
+            font-style: italic;
+            font-size: 24px;
+            text-decoration: underline;
+        }
+
+        /*将 router-link 激活时类名设置为 myActive*/
+        .myActive{
+            font-size: 30px;
+            color: blue;
+        }
+
+
+    </style>
+</head>
+<body>
+<div id="app">
+<p>前端路由,通过url中hash(#号)来实现不同页面间的切换.
+PS:http请求中不会包含hash相关的内容,即有"#内容"只用于指导浏览器,不会出现在请求中.改变 #内容  不触发页面重载</p>
+
+    <h3> router-viw  标签是 vue-router 提供的标签,专门用来当作占位符的,将来路由匹配匹配到的组件,就会展示到 "< router-view>< /router-view>"中</h3>
+    <h3>a标签指向 #路由地址   可实现路由切换显示组件</h3>
+    <a href="#/login">登陆</a>
+    <a href="#/register">注册</a>
+
+    <transition>
+        <router-view></router-view>
+    </transition>
+
+
+
+    <h2>过程:1.点击a标签,改变url的hash; 2.hash改变,路由检测到,据此去检测路由规则匹配;3.找到匹配的规则(path),展示对应的组件(component)</h2>
+
+    <h3>a标签的href内+#可以解决,但有更好的办法,就是vue-router提供的 <i>router-link</i> 标签.它默认是渲染出一个带"#"的a标签,可以用 tag="标签名"更改其渲染成什么,功能不受影响</h3>
+    <router-link to="/login">登陆</router-link>
+    <router-link to="/register" tag="button">注册</router-link>
+
+</div>
+<script>
+    var login = {template:'<h1 style="color: red">登陆组件</h1>'}
+    var register = {template:'<h1 style="color: red">注册组件</h1>'}
+    Vue.component('mylogin',login)
+    //2,创建一个路由对象.导包后 window 全局对象就有了一个路由的构造函数,叫 VueRouter
+    //在 new 路由对象时,可以为 构造函数 传递一个配置对象
+    var routerObj = new VueRouter({
+        // route //这个配置对象中的 route 表示 路由匹配规则(单条)
+        routes:[ //路由匹配规则(多条)
+            //属性1 path ,表示 监听哪个路由链接地址
+            //属性2 component, 表示 如果路由是前面匹配到的 path ,则展示 component 属性对性的组件.
+            //注意,component的属性值必须是一个组件的模板对象(template),不能是组件的引用名称("mylogin")
+            {path:'/login', component:login},
+            {path:'/register', component:register},
+
+            // {path:'/',}  可以设置默认,一般不推荐指向功能组件,可能误解
+
+        ],
+        linkActiveClass:'myActive'
+    })
+
+    var vm = new Vue({
+        el: '#app',   // el 绑定到id为app的元素
+        data: {   //data 属性，存放的是放到 el 中的数据
+
+        },
+        methods: { //方法定义在这里
+
+        },
+    //    router 属性把 路由规则对象 注册到 vm 实例上,用来监听url地址的变化,然后展示对应的组件
+        router:routerObj
+    })
+</script>
+</body>
+</html>

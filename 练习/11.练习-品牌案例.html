@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script src="../vue.js"></script>
+<link rel="stylesheet" href="../bootstrap-3.3.7/css/bootstrap.css">
+<div id="app">
+<!--    添加搜索块-->
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h3 class="panel-title">添加品牌</h3>
+        </div>
+        <div class="panel-body form-inline">
+            <label>
+                Id:
+                <input type="text" class="form-control" v-model="id" required="required" @keyup.f2="add">
+            </label>
+            <label>
+                Name:
+                <input type="text" class="form-control" required="required" v-model="name" @keyup.enter="add">
+            </label>
+
+<!--            Vue中函数绑定，如果带括号可以传参，比如add(arg1,arg2)-->
+          <button class="btn btn-primary" type="button" @click="add">添加</button>
+
+            <label >
+                搜索关键字：
+                <input type="text" class="form-control" v-model="keywords" id="search" v-focus v-color>
+            </label>
+<!--            <button class="btn btn-primary" type="button" @click="search">搜索</button>-->
+        </div>
+    </div>
+
+<!--    信息块-->
+    <table class="table table-bordered table-hover table-striped">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Ctime
+                    <select name="" id="" v-model="pattern" style="right: 0">
+                        <option value="date" selected="selected">精确到日</option>
+                        <option value="second">精确到秒</option>
+                     </select></th>
+                <th>Operation</th>
+            </tr>
+        </thead>
+        <tbody>
+<!--        一开始v-for的数据从list中直接获取-->
+<!--        为了配合search，现在用search筛选出数据，再渲染至此-->
+<!--        为什么初始非空呢，因为 string.indexOf('')==0,也就是keyword空时任意字符串都能通过检测-->
+            <tr v-for="item in search(keywords)" :key="item.id">
+                <td>{{item.id}}</td>
+                <td>{{item.name}}</td>
+<!--                过滤器实现时间的格式化输出-->
+                <td>{{item.ctime | dateFormat(pattern)}}
+                </td>
+                <td>
+                    <a href="" @click.prevent="del(item.id)">删除</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<script>
+<!--    时间格式化的过滤器-->
+    Vue.filter('dateFormat',function (dataStr,pattern='') { //pattern默认为空，避免undefined报错
+        let dt = new Date(dataStr)
+        let y = dt.getFullYear()
+        let m = dt.getMonth() + 1
+        let d = dt.getDate()
+        if (d < 10){
+            d = '0' + d
+        }
+
+    //    格式化字符串.   `${var}` (tab上的字符)内部用 ${变量}组成。类似py的f''
+        if (pattern.toLowerCase() === 'date')
+            return `${y}-${m}-${d}`
+        else{
+            let h = dt.getHours()
+            let mm = dt.getMinutes()
+            let s = dt.getSeconds()
+            return `${y}-${m}-${d}  ${h}:${mm}:${s}`
+        }
+    })
+
+
+//可以默认聚焦搜索，但Vue不建议这样做，那我们用Vue，自己定义个v-focus
+// document.getElementById('search').focus()
+
+//    定义全局指令  Vue.directive(dirName, obj)
+//      参数1：  dirName 为指令名称，定义时不需要 v- 前缀， 在调用时必须加 v- 前缀
+//      参数2：  obj是一个对象，上有一些指令相关的钩子函数,这些函数可以在特定阶段执行对应的函数
+//  PS：和JS相关的操作，建议放到inserted中，防止不生效；和样式相关的，放在bind中即可
+
+    Vue.directive('focus',{
+        bind:function (el) { //当指令绑定到元素上时，会执行 bind 函数，只触发一次
+            // 注意，在每个函数中，第一个参数永远是el，表示被绑定了指令的元素，这个el 参数，是原生JS对象
+            //  元素刚绑定指令时，focus无用，因为还没插入DOM
+            // el.focus()  //这里无效
+        },
+        inserted:function (el) { //元素插入到DOM中的时候，会执行 inserted 函数，只触发一次
+            //这里有效，因为插入DOM时会执行，此时可被选取，自然能被聚焦
+            el.focus()
+        },
+        updated:function () { //当VNode更新时，会执行updated，可能触发多次
+
+        }
+    })
+
+
+    //设定字体颜色为红色的指令
+    Vue.directive('color',{
+        //样式只要通过指令绑定到了元素，不管元素有没有插入到DOM，该元素都有了一个内联样式
+        //将来元素插入DOM时，浏览器会解析并应用该元素
+        bind:function (el) {
+            el.style.color = 'red'
+        }
+    })
+
+
+    //自定义全局按键修饰符
+    //根据键盘码把f2按键绑定成 .f2
+    Vue.config.keyCodes.f2 = 113
+
+    var vm = new Vue({
+        el:'#app',
+        data:{
+            list:[
+                {id:1,name:'奔驰',ctime:new Date()},
+                {id:2,name:'宝马',ctime:new Date()},
+                {id:3,name:'玛莎拉蒂',ctime:new Date()},
+            ],
+            id:'',
+            name:'',
+            keywords:'',//搜索关键字,
+            newLst:[],
+            pattern:'date'
+        },
+        methods:{
+
+            add:function () {
+                let obj = {id:this.id,name:this.name,ctime:new Date()}
+                this.list.push(obj)
+                this.name = this.id = ''   //清表格
+            },
+            del(id){//根据id删除数据
+                //如何根据 id 找到要删除项的索引
+                //找到索引后，调用数组的 splice 方法即可
+                //用some比较好，判断到想找的可以停止，找不到也不报错（forEach()遍历所有，findIndex()没有会报错）
+                this.list.some((item,index)=>{
+                    if (item.id == id){
+                        //item的id对的上，就返回true，立即终止后续循环。index为当前遍历项的索引
+                        this.list.splice(index,1)
+                        return true
+                    }
+                })
+
+            //  也可以这么获取item的index，但它只能查index，而some()内还可以做别的
+            //     var index = this.list.findIndex(item=>{
+            //         if (item.id == id){
+            //             return true
+            //         }
+            //     })
+            },
+            search(keywords){
+                let searchLst = []
+                // this.list.forEach((item) =>{
+                //     if (item.name.indexOf(keywords) != -1) {
+                //         // this.newLst.push(item)
+                //         searchLst.push(item)
+                //     }
+                // })
+
+                //也可以这么写
+                //ES6中，为字符串提供了一个新方法   String.prototype.includes(substr)
+                //包含就返回true，否则false
+                searchLst = this.list.filter((item) =>{
+                    if (item.name.includes(keywords))
+                        return true
+                    return false
+                    })
+                return searchLst
+            },
+
+        }
+    })
+
+
+
+
+
+</script>
+
+</body>
+</html>

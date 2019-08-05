@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../vue.js"></script>
+</head>
+<body>
+<div id="app">
+<!--    父组件向子组件传递 方法 ，使用的是事件绑定机制 v-on: -->
+<!--    当我们定义一个事件属性之后，子组件就能通过某些方式引用它-->
+    <mycom2 v-on:func="show"></mycom2>
+</div>
+<template id="tmp1">
+    <div>
+        <h2>这是子组件</h2>
+        <input type="button" value="点击触发父组件传递的 func 方法" @click="myclick">
+    </div>
+
+</template>
+<script>
+    Vue.component('mycom2',{
+        template:"#tmp1",
+        data(){
+            return{
+                somemsg:{name:"小头儿子",age:6}
+            }
+        },
+        methods:{
+            myclick(){
+            //    点击子组件按钮，如何拿到父组件传递来的 func 方法并调用？
+            //    emit : 英文意思是触发
+            //    下面通过事件绑定机制来触发父组件的 func 方法
+            //    emit('funcName') 里的 funcName 必须和组件 v-on 绑定的方法同名
+                this.$emit('func','从子组件传来的参数',this.somemsg)
+            //    需要传参的话，触发方法名后就可以跟参数，会逐一传入触发函数
+            }
+        },
+        props:["func"]
+    })
+    var vm = new Vue({
+        el: '#app',   // el 绑定到id为app的元素
+        data: {   //data 属性，存放的是放到 el 中的数据
+
+        },
+        methods: { //方法定义在这里
+            show(data){
+                console.log("调用了父组件身上的 show 方法--传参的data是："+data+arguments[1])
+            }
+        },
+    })
+</script>
+</body>
+</html>

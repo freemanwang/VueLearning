@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../vue.js"></script>
+</head>
+<body>
+<div id="app">
+     <button @click="getElement" ref="mybtn">获取元素</button>
+
+<!--    ref 是 vm 对象内一个属性,现在 ref 属性对应的属性内部就有这个 myh3 了-->
+<!--    ref 就是 reference 的简写-->
+    <h3 ref="myh3">哈哈哈啊哈,小丫小老百姓</h3>
+</div>
+<script>
+    var vm = new Vue({
+        el: '#app',   // el 绑定到id为app的元素
+        data: {   //data 属性，存放的是放到 el 中的数据
+
+        },
+        methods: { //方法定义在这里
+            getElement(){
+
+                //$refs 内有通过 ref 注册过的 DOM元素,可操作之;组件也可以通过$refs 来引用(组件的属性和方法)
+                console.log(this.$refs.myh3.innerText)
+            }
+        },
+    })
+</script>
+</body>
+</html>

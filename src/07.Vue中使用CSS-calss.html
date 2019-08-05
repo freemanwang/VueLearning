@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../vue.js"></script>
+    <style>
+        .italic{
+          font-style: italic;
+        }
+        .red{
+            color: red;
+        }
+        .active{
+            letter-spacing: 0.5em;
+        }
+        .thin{
+            font-weight: 200;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <!--html元素的class，即类，也是一种属性，因此，可以通过"v-bind:"将某
+    些内容映射成class的值，实现Vue批量给元素添加style。
+    当然，css需要提前写好-->
+
+    <h1 class="red italic active ">This is a huge head title!!!</h1>
+    <!--绑定，通过数组传值，设置class来实现css-->
+    <h1 :class="['red', 'italic', 'active']">This is a huge head title!!!</h1>
+
+    <!--使用三元表达式，通过flag控制是否添加该css -->
+    <h1 :class="['red', 'italic', flag?'active':'']">This is a huge head title!!!</h1>
+
+    <!--这里更简单，不用写长的三元表达式，在数组中使用对象代替三元表达式-->
+    <h1 :class="['red', 'italic', {'active':falg}]">This is a huge head title!!!</h1>
+
+    <!--对class使用v-bind 绑定对象时，对象的属性是类名，由于对象的属性可带引号，
+        也可不带所以下行未写引号，属性的值 是一个标识符-->
+    <h1 :class="{red:false, italic:true, active:falg, thin:true}">使用对象</h1>
+
+
+    <h1 :class="classobj">使用对象2</h1>
+
+
+
+
+
+
+
+</div>
+<script>
+    var vm = new Vue({
+        el: '#app',   // el 绑定到id为app的元素
+        data: {   //data 属性，存放的是放到 el 中的数据
+        flag:false,
+        // 通过键值对给属性
+        classobj:{red:false, italic:true, active:true, thin:true}
+
+        },
+        methods: { //方法定义在这里
+
+        }
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../vue.js"></script>
+    <script src="../vue-resource.js"></script>
+</head>
+<body>
+<div id="app">
+    <input type="button" value="get请求" @click="getInfo">
+    <input type="button" value="post请求" @click="postInfo">
+    <input type="button" value="jsonp请求" @click="jsonpInfo">
+</div>
+<script>
+    var vm = new Vue({
+        el: '#app',   // el 绑定到id为app的元素
+        data: {   //data 属性，存放的是放到 el 中的数据
+
+        },
+        methods: {
+            getInfo() {
+                //方法定义在这里
+                //get(url [,options])
+                //get请求后， .then 设置成功的回调函数
+                this.$http.get('http://localhost/Vue_Server/Referer.php').then(function (result) {
+                    console.log(result.body)
+                })
+            },
+
+            postInfo() {
+                //post(url [,body] [,options])
+                //post请求一般用表单发送数据，格式  application/x-www-form-urlencoded
+                //手动发送的 post 请求，默认没有表单格式，有些服务器无法处理
+                //通过post第三个参数，{emulateJSON:true}设置提交内容为 普通表单格式
+                //一般都这么设，避免出问题
+                this.$http.post('http://localhost/Vue_Server/Referer.php',{},{ emulateJSON:true}).then(
+                    result => {
+                        console.log(result.body)
+                    }
+                )
+            },
+            jsonpInfo(){
+                this.$http.jsonp('http://localhost/Vue_Server/JSONP.php').then(result => {
+                console.log(result.body)
+                })
+            },
+
+        }
+    })
+    //jsonp 的回调方法
+    function cb(arr){
+        console.log(arr)
+    }
+</script>
+
+<!--jsonp实现请求+执行回调-->
+<script src='http://localhost/Vue_Server/JSONP.php?callback=cb'>
+
+</script>
+</body>
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:v-model="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../vue.js"></script>
+    <style>
+        .in1{
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <!-- "v-bind:" 只能实现单向绑定,从 M 绑定到 V-->
+    <!-- 此时,input中内容改变,h4内容也改变,这就是 V和M双向绑定了-->
+    <h4>{{ msg }}</h4>
+    <input type="text" v-model:value="msg" class="in1">
+
+</div>
+<script>
+    var vm = new Vue({
+        el: '#app',   // el 绑定到id为app的元素
+        data: {   //data 属性，存放的是放到 el 中的数据
+            msg:'hello world many many times'
+        },
+        methods: { //方法定义在这里
+
+        }
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="app">
+    <h1>{{title}}</h1>
+    <button @click="randomTitle">改变title</button>
+    <button @click="destroyVm()">销毁实例</button>
+    <input v-model:value="x" @change="cal">
+</div>
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<!--<script src="../vue.js"></script>-->
+<script>
+    var vm = new Vue({
+        el:'#app',
+        data:{
+            title: 'Welcome to Vue!',
+            x:'',
+            //嵌套箭头函数。  (5*9)+3
+        },
+        methods:{
+            cal:function(){
+                this.x = (x => (x=>x*9)(x)+3)(this.x)
+            },
+            randomTitle(){
+                this.title = 'Hello ' + ['World','China','Universe'][Math.floor(Math.random()*2.999)]
+                console.log('title changed')
+            },
+            destroyVm(){
+                this.$destroy()    //我猜是node.js提供支持
+            },
+            beforeCreate(){
+                console.log('before create')
+            },
+            created(){
+                console.log('created')
+            },
+            beforeMount(){
+                console.log('before mount')
+            },
+            mounted(){
+                console.log('mounted')
+            },
+            beforeUpdate(){
+                console.console.log('before Update')
+            },
+            Updated(){
+                console.log('Updated')
+            },
+            beforeDestroy(){
+                console.log('before Update')
+            },
+            destroyed(){
+                console.log('Updated')
+            },
+
+
+        }
+    })
+</script>
+</body>
+</html>

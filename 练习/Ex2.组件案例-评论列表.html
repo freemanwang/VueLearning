@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../vue.js"></script>
+    <link rel="stylesheet" href="../bootstrap-3.3.7/css/bootstrap.css">
+</head>
+<body>
+
+<div id="app">
+    <comment-box @func="loadComments"></comment-box>
+    <ul class="list-group">
+        <li class="list-group-item" v-for="item in list" :key="item.id">
+            <span class="badge">评论人：{{item.user}}</span>
+            {{item.content}}
+
+        </li>
+    </ul>
+
+</div>
+<template id="tmp1">
+    <div>
+        <div class="form-group">
+            <label>评论人：</label>
+            <input type="text" class="form-group" v-model="user">
+        </div>
+        <div class="form-group">
+            <label>评论内容：</label>
+            <textarea name="" id="" cols="20" rows="5" class="form-control" v-model="content"></textarea>
+        </div>
+        <div class="form-group">
+            <input type="button" value="发表评论" class="btn btn-primary" @click="postComment">
+        </div>
+    </div>
+</template>
+<script>
+<!--    定义个评论盒子组件-->
+    //定义在组件内的数据，自然也就在这里双向绑定
+    Vue.component('commentBox',{
+        template:"#tmp1",
+        data(){
+            return {
+                user:'',
+                content:"",
+            }
+        },
+        methods:{
+            postComment(){
+            //    逻辑：
+            //    1.评论数据存到哪？  存到localStorage中。localStorage.setItem('cmts','')
+            //    2.先组织出一个最新的评论数据对象
+            //    3.想办法把第2步得到的评论对象保存到 localStorage 中
+            //    3.1 localStorage 只支持存放字符串数据，要先调用 JSON.stringify
+            //    3.2 在保存最新的评论前，要从 localStorage 中获取之前的评论数据，转换为一个 数组对象 ，然后把最新评论 push 到数组
+            //    3.3 如果原本 localStorage 中评论字符串为空,可以返回一个 '[]',让JSON.parse转换.否则 JSON.parse('') 的话会报错
+            //    3.4 把 最新的 评论列表数组, 再次调用 JSON.stringify 转为 数组字符串,然后调用 localStorage.setItem() 保存之
+
+                var comment = {id:Date.now,user:this.user,content:this.content}
+                //从 localStorage 中获取所有评论,空的话返回空数组
+                var list = JSON.parse(localStorage.getItem('cmts') || '[]')
+                list.push(comment)
+                localStorage.setItem('cmts',JSON.stringify(list))
+                this.user = this.content = ''
+
+            //    发表评论后并不会加载,如果能调用父组件的loadComments就好了
+                this.$emit('func')
+            //    发表评论后同步刷新了
+            }
+        },
+    })
+
+    var vm = new Vue({
+        el: '#app',   // el 绑定到id为app的元素
+        data: {   //data 属性，存放的是放到 el 中的数据
+            list:[
+                {id:1,user:'李白',content:'天生我材必有用'},
+                {id:2,user:'李白白',content:"千金散去复还来"},
+                {id:3,user:'桃白白',content:'hello world 3000'},
+            ]
+        },
+        methods: { //方法定义在这里
+        //    想更新评论的话,需要从 localStorage 中加载评论列表
+            loadComments(){
+                let cmts = JSON.parse(localStorage.getItem('cmts') || '[]')
+                this.list = cmts
+            }
+
+        },
+        created(){
+            this.loadComments()
+        },
+
+    })
+</script>
+</body>
+</html>

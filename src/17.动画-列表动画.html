@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        li{
+            border: 1px dashed black;
+            margin: 5px;
+            line-height: 35px;
+            padding-left: 5px ;
+            font-size: 1.5em;
+
+            /**/
+            width: 100%;
+        }
+
+        .v-enter,
+        .v-leave-to{
+            opacity: 0;
+            transform: translateY(80px);
+
+        }
+
+        .v-enter-active,
+        .v-leave-active{
+            transition: all 0.6s ease;
+        }
+
+
+        /*下面的 v-move 和 v-leave-active 配合使用，能实现列表后面的元素移动上来时慢慢移，不会突兀的顶上。记住就好，2个搭配才生效*/
+        .v-move{
+
+            transition: all 0.6s ease;
+        }
+        .v-leave-active{
+            position: absolute;
+        }
+
+
+        li:hover{
+            background-color: pink;
+            transition: all 1s ease;
+        }
+
+
+    </style>
+    <title>Title</title>
+    <script src="../vue.js"></script>
+</head>
+<body>
+<div id="app">
+    <div>
+        <span>Id: <input type="text" v-model="id" ></span>
+        <span>Name: <input type="text" v-model="name"></span>
+        <button @click="add">添加</button>
+    </div>
+<!--        实现列表过度时，如果需要过度的元素是通过 v-for 循环渲染出来的，不能使用 transition 包裹，需用 transition-group 包裹-->
+<!--        v-for 为循环创建元素设置动画，有个先决条件，必须每个元素都设置 :key 属性-->
+<!--        给 transition-group 添加 appear，实现页面刚出来时的入场效果-->
+<!--        给 transition-group 设定 tag 属性，指定transition-group渲染为什么元素；如果不指定，默认渲染为 span。 这里可以 tag="ul"-->
+        <transition-group appear tag="ul">
+<!--            现在新增的表项就有动画效果-->
+            <li v-for="(item,i) in list" :key="item.id" @click="del(i)">
+                {{item.id}} ---- {{item.name}}
+            </li>
+        </transition-group>
+
+
+
+</div>
+<script>
+    var vm = new Vue({
+        el: '#app',   // el 绑定到id为app的元素
+        data: {   //data 属性，存放的是放到 el 中的数据
+            list:[
+                {id:1,name:'Alice'},
+                {id:2,name:'Bob'},
+                {id:3,name:'Carol'},
+                {id:4,name:'Eve'},
+                {id:5,name:'David'},
+            ],
+            id:'',
+            name:''
+        },
+        methods: { //方法定义在这里
+            add(){
+                this.list.push({id:this.id,name:this.name})
+                this.id = ''
+                this.name = ''
+            },
+            del(i){
+                this.list.splice(i,1)
+            }
+        },
+    })
+</script>
+</body>
+</html>

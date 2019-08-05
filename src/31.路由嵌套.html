@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../vue.js"></script>
+    <script src="../vue-router-3.0.6.js"></script>
+</head>
+<body>
+<div id="app">
+    <router-link to="/account">Account</router-link>
+    <br>
+
+    <router-view></router-view>
+</div>
+<template id="tmp1">
+    <div>
+        <h1>这是 Account 组件</h1>
+        <router-link to="/account/login">登陆</router-link> &nbsp;&nbsp;&nbsp;
+        <router-link to="/account/register" tag="button">注册</router-link>
+<!--        下面这个 router-view 是显示嵌套的子路由组件的,没他不显示子路由组件-->
+        <router-view></router-view>
+    </div>
+</template>
+
+<script>
+    var account = {
+        template:"#tmp1"
+    }
+    var login = {
+        template:'<h3 style="color: red">登陆组件</h3>',
+        };
+    var register = {template:'<h3 style="color: red">注册组件</h3>'};
+
+    var router = new VueRouter({
+        routes:[
+            // "/" 就是 根目录
+            // {path:'/', component:account}
+            {path:'/account',
+                component:account,
+                //children 为嵌套的子路由,那么相应的 router-link 的 to 也需要带 父路由 的前缀,这里就是前面带 "/account"
+                //注意这里子路径前没有 "/",因为 "/" 代表从根目录开始匹配,根本不会加上 "/account" 的前缀
+                children:[
+                    {path:'login', component:login},
+                    {path:'register', component:register},
+                ]
+             },
+            //不能把子路由写在同一层级,这样无法实现路由嵌套,要用 children 属性
+            // {path:'/account/login', component:login},
+            // {path:'/account/register', component:register},
+        ]
+    })
+
+    var vm = new Vue({
+        el: '#app',   // el 绑定到id为app的元素
+        data: {   //data 属性，存放的是放到 el 中的数据
+
+        },
+        methods: { //方法定义在这里
+
+        },
+        router
+    })
+</script>
+</body>
+</html>

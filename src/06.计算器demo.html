@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        <input type="text" v-model="n1">
+        <select name="" id="" v-model="opt">
+            <option value="+">+</option>
+            <option value="-">-</option>
+            <option value="*">*</option>
+            <option value="/">/</option>
+        </select>
+        <input type="text" v-model="n2">
+        <input type="button" value="=" @click="cal">
+        <input type="text" v-model="result" >
+    </div>
+<script>
+    var vm = new Vue({
+        el:'#app',
+        data: {
+            n1: 0,
+            n2: 0,
+            opt: '+',
+            result:0
+        },
+        methods:{
+            cal(){
+                var n1 = parseInt(this.n1)
+                var n2 = parseInt(this.n2)
+                console.log('cal run')
+                switch(this.opt){
+                    case '+': this.result = n1 + n2
+                        break
+                    case '-': this.result = n1 - n2
+                        break
+                    case '*': this.result = n1 * n2
+                        break
+                    case '/': this.result = n1 / n2
+                        break
+                }
+
+            //  也可以用 eval() 执行拼接后的字符串
+            //  可以这么做，但不建议这么做，正式开发中尽量少用。
+            //     var codeStr = 'parseInt(this.n1)'+this.opt+'parseInt(this.n2)'
+            //     this.result = eval(codeStr)
+            }
+
+
+        }
+    })
+</script>
+</body>
+
+
+</html>

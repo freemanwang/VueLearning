@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../vue.js"></script>
+</head>
+<body>
+<div id="app">
+    <h1>filter</h1>
+    <p>{{msg}}</p>
+    <h2>把“单纯”变成“邪恶”，输出。（过滤器filter）</h2>
+<!--    msg拿到值，然后传递给名为 msgFormat的filter处理-->
+    <label for="">Vue.filter方式实现：</label><p>{{msg | msgFormat}}</p><br>
+    <label for="">Vue实例内部filters实现：</label><p>{{msg | msgFormat2}}</p><br>
+    <label for="">filter传参实现换成指定字符：</label>
+    <span>把“单纯”换成</span><input type="text" v-model="rep">
+    <p>{{msg | msgFormat3(rep)}}</p><br>
+
+</div>
+<div id="app2">
+    <h3>这里是app2内部</h3>
+    {{ dt | dateFormat}}
+</div>
+<script>
+    //全局过滤器的filter要写在Vue实例前！！！很重要，一开始写在下面就报错
+    //过滤器可以用在两个地方：双花括号插值和 v-bind 表达式
+    //过滤器应该被添加在 JavaScript 表达式的尾部，由“管道”符号指示
+
+    //  在双花括号中,后面是过滤器名
+    // {{ message | capitalize }}
+
+    // 在 `v-bind`中，后面是过滤器名
+    // <div v-bind:id="rawId | formatId"></div>
+
+    // 1.全局过滤器，全局Vue对象都能用
+    // 过滤器语法  Vue.filter('过滤器名',function(){})
+    //    过滤器的function，第一个参数一定是 过滤器 管道符前面传来的数据
+
+
+    //实现  “单纯”  转为  “邪恶” 的过滤器
+    Vue.filter('msgFormat', function (msg) {
+        return msg.replace('单纯',"邪恶")
+    })
+    Vue.filter('msgFormat3', function (msg,rep) {
+        if (rep != '')
+            return msg.replace(/单纯/g,rep)
+        else
+            return msg
+    })
+
+    //全局时间格式化过滤器
+    Vue.filter('dateFormat',function(date){
+        let dt = new Date(dataStr)
+        let y = dt.getFullYear()
+        let m = dt.getMonth() + 1
+        let d = dt.getDate()
+        if (d < 10){
+            d = '0' + d
+        }
+        let h = dt.getHours()
+        let mm = dt.getMinutes()
+        let s = dt.getSeconds()
+        return `${y}-${m}-${d}  ${h}:${mm}:${s}`+'   全局过滤器'
+    })
+
+
+
+    //2.私有过滤器，写在Vue对象里的filters:{}内部，例如msgFormate2，只能vm对象调用
+    var vm = new Vue({
+        el: '#app',   // el 绑定到id为app的元素
+        data: {   //data 属性，存放的是放到 el 中的数据
+            msg: '曾经，我也是一个单纯的少年，单纯的我，傻傻的问，谁是世界上最单纯的男人',
+            rep:''
+        },
+        methods: { //方法定义在这里
+
+        },
+        filters:{
+            //此处定义的是私有过滤器，定义过滤器最少需要 过滤器名 和 处理函数
+            msgFormat2:function(data){
+                return data.replace(/单纯/g,'疯狂')
+            },
+            // msgFormat5(date){
+            //     let dt = new Date(dataStr)
+            //     let y = dt.getFullYear()
+            //     let m = dt.getMonth() + 1
+            //     let d = dt.getDate()
+            //     if (d < 10){
+            //         d = '0' + d
+            //     }
+            //     let h = dt.getHours()
+            //     let mm = dt.getMinutes()
+            //     let s = dt.getSeconds()
+            //     return `${y}-${m}-${d}  ${h}:${mm}:${s}`
+            // }
+        }
+    })
+
+    var vm2 = new Vue({
+        el:'#app2',
+        data: {
+            dt:new Date()
+        },
+        methods: {},
+        filters: {
+            dateFormat(date){
+                let dt = new Date()
+                let y = dt.getFullYear()
+                let m = dt.getMonth() + 1
+                let d = dt.getDate()
+                if (d < 10){
+                    d = '0' + d
+                }
+                //老办法，检测大小决定是否填0
+                let h = dt.getHours()
+                let mm = dt.getMinutes()
+                let s = dt.getSeconds()
+
+                //ES6的String新方法处理单数前添0
+                //String.prototype.padStart(maxLength,fillString='XX')
+                //方法是在字符串起始添加内容，maxLength为填充后最大长度，fillString为填充内容
+                h = h.toString().padStart(2,'0')
+                mm = mm.toString().padStart(2,'0')
+                s = s.toString().padStart(2,'0')
+                return `${y}-${m}-${d}  ${h}:${mm}:${s}`+'   私有过滤器'
+            }
+        }
+    })
+
+
+
+</script>
+</body>
+</html>

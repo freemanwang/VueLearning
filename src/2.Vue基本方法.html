@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:v-bind="http://www.w3.org/1999/xhtml" xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns: xmlns:>
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../vue.js"></script>
+    <style>
+        [v-cloak]{
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <!--使用 v-cloak 能解决 插值表达式闪烁的问题-->
+    <!--通过style使 v-cloak 不显示，加载完， v-claok 去掉后自然就显示出来了-->
+    <!--就是因为网速慢，没加载好之前，不显示 {{}} -->
+    <p v-cloak>{{ msg }}</p>
+    <!--默认 v-text 是不存在闪烁问题的-->
+    <!-- v-text 会覆盖元素中原本的内容，但 插值表达式 只替换自己的占z位符，不改变整个元素的内容-->
+    <!-- v-text 和 插值表达式，都会将内容当作纯文本内容，而非html代码-->
+    <h4 v-text="msg"></h4>
+
+    <!--区别：v-html会把内容当html代码-->
+    <div v-text="msg2"></div>
+    <div v-html="msg2"></div>
+
+    <!--  v-bind 是vue提供的，用于绑定属性的指令-->
+    <!--button1的title就是'mytitle'-->
+    <input type="button" value="按钮1" title="mytitle">
+    <!--button2的title是把mytitle当作变量，因此是'自定义title'-->
+    <!--而且因为mytitle被当作一个变量，后面还可以用 + 做字符串连接操作-->
+    <!-- "v-bind: "指令可以被简写成 ":"-->
+    <!-- v-bind 中，可以写合法的JS表达式-->
+    <input type="button" value="按钮2" v-bind:title="mytitle">
+    <input type="button" value="按钮3" :title="mytitle">
+    <p v-if="bool">这里是条件判断，if成立显示这里。</p>
+    <p v-else>这里是条件判断，else成立显示这里。</p>
+
+    <!-- Vue中提供了 "v-on:"，事件绑定机制 -->
+    <!--浏览器常用的比如click，mouseover等，都可以通过Vue绑定到函数-->
+    <input type="button" value="Click" :title="mytitle + 'hello'"
+    v-on:click="show">
+    <input type="button" value="MouseIn" :title="mytitle + 'hello'"
+    v-on:mouseover="show">
+    <!--同样的，"v-on:"也可以被简写，办法就是 "@:"-->
+    <input type="button" value="简写" @click="show">
+    <input type="button" value="mouseup" @mouseup="show">
+
+</div>
+<script>
+    var vm = new  Vue({
+        el: '#app',
+        data:{
+            msg:'hello',
+            msg2:'<h1>这是一个h1标签</h1>',
+            mytitle:'自定义title',
+            bool:true,
+
+        },
+        methods:{//methods属性中定义当前Vue实例所有可用方法
+            show:function () {
+                alert("hello")
+            },
+
+            
+        }
+    })
+    
+</script>
+</body>
+</html>

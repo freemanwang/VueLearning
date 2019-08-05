@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../vue.js"></script>
+</head>
+<body>
+<div id="app">
+    <!-- "v-bind:"直接把style内容给变成定义的-->
+    <h1 :style="cstyle">hello world 3 thousands</h1>
+    <!--可以通过数组，绑定多个style对象-->
+
+    <h4 :style="[cstyle, sty2]">多个css同时作用</h4>
+</div>
+<script>
+    var vm = new Vue({
+        el:'#app',
+        data:{
+            cstyle:{color:'red','font-size':'2em','font-style':'italic','letter-spacing':'1em'},
+            sty2:{'color':'blue', 'padding':'10px'}
+        },
+        methods:{
+
+        }
+    })
+</script>
+</body>
+</html>

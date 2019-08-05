@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../vue.js"></script>
+</head>
+<body>
+<div id="app">
+    <p class="data-label">A</p><input type="text" v-model="a">
+    <p class="data-label">B</p><input type="text" v-model="b">
+    <p class="data-label">C=A*2+2= {{c}}</p>
+    <p class="data-label">D=B*2+2= {{d}}</p>
+    <p class="data-label">E=B/2= {{e}}</p>
+    <p class="data-label">F=C+D= {{f}}</p>
+    <p class="data-label">G=D-E= {{g}}</p>
+</div>
+<script>
+    var vm = new Vue({
+        el: '#app',   // el 绑定到id为app的元素
+        data: {   //data 属性，存放的是放到 el 中的数据
+            a:3,
+            b:4
+        },
+        computed: { //方法定义在这里
+            c(){
+                return this.a * 2 + 2
+            },
+            d(){
+                return this.a + this.b * 2
+            },
+            e(){
+                return this.b / 2
+            },
+            f(){
+                return this.c + this.d
+            },
+            g(){
+                return this.d - this.e
+            }
+        }
+    })
+</script>
+</body>
+</html>

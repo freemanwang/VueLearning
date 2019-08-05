@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../vue.js"></script>
+    <link rel="stylesheet" href="../animate.css">
+    <style>
+        #ball{
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: red;
+        }
+
+    </style>
+</head>
+<body>
+<div id="app">
+<p>
+    JavaScript 钩子 <br>
+    可以在属性中声明 JavaScript 钩子<br>
+
+            v-on:before-enter="beforeEnter"<br>
+            v-on:enter="enter"<br>
+            v-on:after-enter="afterEnter"<br>
+            v-on:enter-cancelled="enterCancelled"<br>
+    <br>
+            v-on:before-leave="beforeLeave"<br>
+            v-on:leave="leave"<br>
+            v-on:after-leave="afterLeave"<br>
+            v-on:leave-cancelled="leaveCancelled"<br>
+    如果只需要半场动画，比如加入购物车，加进去就行，不需要回来，那么可以只给半场定义动画。<br>
+    <strong>当只用 JavaScript 过渡的时候，在 enter 和 leave 中必须使用 done 进行回调。否则，它们将被同步调用，过渡会立即完成。</strong>
+</p>
+    <button id="btn" @click="flag=!flag" >快到碗里来</button>
+<!--如果 enter 里没有done()，会延迟一小下才调用afterEnter()，也就是说到达底部后延迟一下才隐藏小球-->
+    <transition @before-enter="beforeEnter"
+                @enter="enter"
+                @after-enter="afterEnter">
+        <div id="ball" v-show="flag"></div>
+    </transition>
+
+<!--    -->
+</div>
+<script>
+    var vm = new Vue({
+        el: '#app',   // el 绑定到id为app的元素
+        data: {   //data 属性，存放的是放到 el 中的数据
+            flag:false,
+        },
+        methods: { //方法定义在这里
+            //注意，动画钩子函数的第一个参数 el，表示要执行动画的DOM元素，是个原生的JS DOM对象.写上形参占位后用就行，会自动传参的。
+            beforeEnter(el){//    动画入场前，此时动画未开始，可以在此设置动画开始前的起始样式
+                el.style.transform = 'translate(0,0)'
+            //    设置起始位置
+            },
+            enter(el,done){ // 动画开始之后的样式，动画已完成，可以在此设置动画结束后的样式
+                el.offsetWidth //这句话没实际作用，但不写出不来动画效果。
+                //可以认为 el.offsetWidth 会强制动画刷新
+                // el.offsetHeight
+                //同理，offsetHeight，offsetLeft等都行
+                el.style.transform = 'translate(150px,450px)'
+                el.style.transition = 'all 1.5S ease'
+                done()
+            },
+            afterEnter(el){
+                console.log('小球动画结束，加入后就消失')
+                this.flag = !this.flag
+            }
+        },
+    })
+</script>
+</body>
+</html>

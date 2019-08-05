@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../vue.js"></script>
+    <style>
+        #ball{
+            width: 20px;
+            height: 20px;
+            background-color: red;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+<!--    v-show指令设置隐藏是为该元素添加css样式--display:none,但DOM元素还存在
+        v-if指令设置隐藏是将DOM元素整个删除，DOM元素不在存在-->
+    <button @click="flag=!flag">加入购物车</button>
+    <transition
+        @before-enter="beforeEnter"
+        @enter="enter"
+        @after-enter="afterEnter">
+        <div id="ball" v-show="flag"></div>
+    </transition>
+
+</div>
+<script>
+    var vm = new Vue({
+        el: '#app',   // el 绑定到id为app的元素
+        data: {   //data 属性，存放的是放到 el 中的数据
+            flag:false
+        },
+        methods: { //方法定义在这里
+            beforeEnter(el){
+                el.style.transform = 'translate(0,0)'
+            },
+            enter(el,done){
+                el.offsetWidth
+                el.style.transform = 'translate(150px,450px)'
+                el.style.transition = 'all 1s ease'
+                done()  //就是立即调用 afterEnter()
+            },
+            afterEnter(el){
+                this.flag = false
+            }
+        },
+    })
+</script>
+</body>
+</html>

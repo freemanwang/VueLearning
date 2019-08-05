@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../vue.js"></script>
+    <script src="../vue-router-3.0.6.js"></script>
+</head>
+<body>
+<div id="app">
+
+<!--    1. 需要监听到 文本框的数据 的改变,才能知道何时拼接 fullname-->
+<!--    2.如何监听 文本框的数据 呢?  用DOM的事件 change 或 keyup 均可(beforeUpdate是针对整个vm实例的更新,而非文本框;)-->
+    <input type="text" v-model="firstname" @change="getFullname">
+    <input type="text" v-model="lastname" @keyup="getFullname">
+    <input type="text" v-model="fullname">
+    <p>{{fullname}}</p>
+    <p>{{fullname}}</p>
+    <p>{{fullname}}</p>
+
+</div>
+<script>
+    var vm = new Vue({
+        el: '#app',   // el 绑定到id为app的元素
+        data: {   //data 属性，存放的是放到 el 中的数据
+            firstname:'',
+            lastname:'',
+        //    把fullname 定义到 conputed 中
+        },
+        methods: { //方法定义在这里
+            getFullname(){
+                this.fullname = this.firstname + this.lastname
+            }
+        },
+        computed:{ //在 computed 中,可以定义一些属性,即 计算属性, 计算属性的本质是 方法 ,只不过我们在使用时是把他们的 名字 直接当作 属性 来使用,并不会当成方法去调用
+
+            //注意1:计算属性在引用时,一定不要加 () 去调用,而是当作 普通属性 去用
+            //注意2: 只要 计算属性 的 function 内部所引用到 任何data中的数据 发生改变,就会立即重新计算这个 计算属性
+            //注意3:计算属性的求值结果,会被缓存起来,方便下次直接使用;如果 计算属性的方法 中的数据均未改变,那么不会重新对 计算属性 求值
+            fullname:function () {
+                console.log('ok') //修改仅打印一次 ok ,下面的p内引用不触发
+                return this.firstname +'.'+this.lastname
+            }
+
+        //    计算属性和watch区别
+        //    计算属性必须 return , watch不一定需要
+        //
+        }
+    })
+</script>
+</body>
+</html>

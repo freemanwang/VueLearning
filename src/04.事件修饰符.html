@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../vue.js"></script>
+    <style>
+        .div1{
+            background-color: darkred;
+        }
+
+        .div2{
+            background-color: darkgoldenrod;
+            padding: 50px;
+            margin: 50px;
+        }
+    </style>
+</head>
+<body>
+<!--
+        Vue提供了事件修饰符:
+        .stop 阻止冒泡(例子就是冒泡)(从内向外触发是冒泡)
+        .prevent 阻止默认事件
+        .capture 添加事件监听器时使用事件捕获模式(从外向内触发是捕获)
+        .self 只当事件在该元素本身(比如子元素就不算)触发时,触发回调
+        .once 事件只触发一次
+    -->
+    <!-- 第一个btn结果是先出发button点击，再触发div点击-->
+    <!--第2个btn只有自身事件触发-->
+    <div id="app" class="div1" @click="dclick">
+        <input type="button" value="click" @click="bclick">
+        <input type="button" value="CLKwithStop" @click.stop="bclick">
+        <br>
+        <hr>
+
+        <!--console会写,但不会跳转,因为默认跳转行为被prevent了-->
+        <!--第2个,只会阻止1次,第2次就跳转了-->
+        <a href="www.baidu.com" @click.prevent="bclick">baidu</a>
+        <a href="http://www.baidu.com" @click.prevent.once="bclick">baidu</a>
+
+        <!-- capture例子:给div改成 @click.capture="dclick" 后,
+        在btn上点击,先触发 dclick , 再触发 bclick 事件-->
+        <input type="button" value="click" @click="bclick">
+        <!-- self例子:给div改成 @click.self="dclick" 后,
+        在btn上点击,只触发 bclick 事件,不会触发 dclick 事件-->
+
+        <!-- .stop 和 .self  的区别-->
+        <!--  inner 的 .self 只会阻止自身冒泡触发,不会影响outter冒泡-->
+        <!-- 而 button上如果 stop,那外层2个都不会冒泡了-->
+        <div @click.self="dclick2" class="div2">
+            <input type="button" @click="bclick" value="click"></input>
+        </div>
+
+
+    </div>
+
+    <script>
+        var vm = new Vue({
+            el:'#app',
+            data:{
+
+            },
+            methods:{
+                dclick(){
+                    console.log("outter-div被点击了")
+                },
+                dclick2(){
+                    console.log("inner-div被点击了")
+                },
+                bclick(){
+                    console.log("button被点击了")
+                }
+            }
+        })
+    </script>
+</body>
+</html>

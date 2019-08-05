@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../vue.js"></script>
+    <script src="../vue-router-3.0.6.js"></script>
+</head>
+<body>
+<div id="app">
+
+<!--    1. 需要监听到 文本框的数据 的改变,才能知道何时拼接 fullname-->
+<!--    2.如何监听 文本框的数据 呢?  用DOM的事件 change 或 keyup 均可(beforeUpdate是针对整个vm实例的更新,而非文本框;)-->
+    <input type="text" v-model="firstname" @change="getFullname">
+    <input type="text" v-model="lastname" @keyup="getFullname">
+    <input type="text" v-model="fullname">
+
+</div>
+<script>
+    var vm = new Vue({
+        el: '#app',   // el 绑定到id为app的元素
+        data: {   //data 属性，存放的是放到 el 中的数据
+            firstname:'',
+            lastname:'',
+            fullname:''
+        },
+        methods: { //方法定义在这里
+            getFullname(){
+                this.fullname = this.firstname + this.lastname
+            }
+        },
+    })
+</script>
+</body>
+</html>

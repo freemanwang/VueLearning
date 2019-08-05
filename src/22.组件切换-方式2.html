@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../vue.js"></script>
+</head>
+<body>
+<div id="app">
+    <h3 v-text:value="msg"></h3>
+    <h3>动态切换 componentId 可以实现组件切换 </h3>
+    <a href="" @click.prevent="comName='login'">登陆</a>
+    <a href="" @click.prevent="comName='register'">注册</a>
+    <a href="" @click.prevent="comName='forgetPW'">忘记密码</a>
+    <a href=""@click.prevent="comName='stolen'">账号被盗</a>
+<!--    注意，""内部的 组件名 需要被 ''包起来-->
+    <component :is="comName"></component>
+</div>
+<script>
+    Vue.component('login',{
+        template:'<h3>登陆组件</h3>'
+    })
+    Vue.component('register',{
+        template:'<h3>注册组件</h3>'
+    })
+    Vue.component('forgetPW',{
+        template:'<h3>找回密码组件</h3>'
+    })
+    Vue.component('stolen',{
+        template:'<h3>冻结账号</h3>'
+    })
+
+
+    var vm = new Vue({
+        el: '#app',   // el 绑定到id为app的元素
+        data: {   //data 属性，存放的是放到 el 中的数据
+            msg:"语法：<component :is=\"componentId\"></component>",
+            comName:'login'
+        },
+        methods: { //方法定义在这里
+
+        },
+    })
+</script>
+</body>
+</html>

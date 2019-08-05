@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../vue.js"></script>
+    <style>
+        #app div{
+            border: 2px dashed black;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+     <h2>下面3个的自增作用于所有</h2>
+    <counter></counter>
+    <counter></counter>
+    <counter></counter>
+
+    <br>
+
+    <h2>下面3个的自增互不影响</h2>
+    <counter2></counter2>
+    <counter2></counter2>
+    <counter2></counter2>
+</div>
+<template id="tmp1">
+    <div>
+        <button @click="increment">+1</button>
+        <h3>{{count}}</h3>
+    </div>
+
+</template>
+<script>
+    var dataObj = { count:0}
+    //这是一个计数器组件，点一次button，data中的 count +1
+    Vue.component('counter',{
+        template:'#tmp1',
+        data(){ //之前写法的话应是 return {count"0}, 等价return一个数据对象
+            // 现在是外部定义了一个对象dataObj，并将其return
+            //后者的问题是，return的是同一个对象，那么如果有多个该组件，改变一个，其余都改变
+            return dataObj
+        },
+        methods:{
+            increment(){
+                this.count ++
+            }
+        }
+    })
+
+    Vue.component('counter2',{
+        template:'#tmp1',
+        data(){
+            //每次 return 的对象不同，因此自增互不影响
+            return {
+                count:0
+            }
+        },
+        methods:{
+            increment(){
+                this.count ++
+            }
+        }
+    })
+
+    var vm = new Vue({
+        el: '#app',   // el 绑定到id为app的元素
+        data: {   //data 属性，存放的是放到 el 中的数据
+
+        },
+        methods: { //方法定义在这里
+
+        },
+    })
+</script>
+</body>
+</html>

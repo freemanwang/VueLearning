@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../vue.js"></script>
+    <script src="../vue-router-3.0.6.js"></script>
+</head>
+<body>
+<div id="app">
+
+    <!--    1. 需要监听到 文本框的数据 的改变,才能知道何时拼接 fullname-->
+    <!--    2.如何监听 文本框的数据 呢?  用DOM的事件 change 或 keyup 均可(beforeUpdate是针对整个vm实例的更新,而非文本框;)-->
+    <input type="text" v-model="firstname"> +
+    <input type="text" v-model="lastname"> =
+    <input type="text" v-model="fullname">
+    <br>
+
+    <router-link to="/login">登陆</router-link>
+    <router-link to="/register" tag="button">注册</router-link>
+    <router-view></router-view>
+
+</div>
+<script>
+
+    var login = {template:'<h1 style="color: red">登陆组件</h1>'}
+    var register = {template:'<h1 style="color: red">注册组件</h1>'}
+    var router = new VueRouter({
+        routes:[ //路由匹配规则(多条)
+            {path:'/login', component:login},
+            {path:'/register', component:register},
+        ],
+    })
+
+    var vm = new Vue({
+        el: '#app',   // el 绑定到id为app的元素
+        data: {   //data 属性，存放的是放到 el 中的数据
+            firstname:'',
+            lastname:'',
+            fullname:''
+        },
+        methods: { //方法定义在这里
+        },
+        router,
+
+        //watch 是一个对象, key 是需要观察的表达式, value 是对应的回调函数
+        //主要用来监听某些特定数据的变化
+        //其默认参数1为 改变后的数据 ,参数2为 改变前的数据
+        watch:{ //使用这个 watch 属性,可以监视 data 中指定数据的变化,然后触发这个 watch 中对应的 function 处理函数
+            //这个 firstname 表示的就是 监控data里的firstname,发生改变就触发function
+            firstname:function (newVal, oldVal) { //借用 newVal oldVal 也能行
+                // console.log("监视到了 firstname 的变化")
+                // this.fullname = this.firstname + this.lastname
+
+                console.log(newVal + '----' + oldVal)
+                this.fullname = newVal + this.lastname
+            },
+            lastname:function (newVal) {
+                this.fullname = this.firstname +'.' + newVal
+            },
+
+            //    监听 非DOM元素,例如router,只能用watch,因为没法+事件
+            "$route.path":function (newVal, oldVal) {
+                console.log(newVal + '----' + oldVal)
+                if (newVal == '/login'){
+                    console.log("欢迎进入登陆界面")
+                }else{
+                    console.log("欢迎进入注册页面")
+                }
+            }
+        }
+    })
+</script>
+</body>
+</html>

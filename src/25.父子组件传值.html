@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../vue.js"></script>
+</head>
+<body>
+<div id="app">
+    <mylogin></mylogin>
+    <login></login>
+
+<!--    父组件在引用子组件时，可通过属性绑定（v-bind）把需要传递给子组件的数据，以属性绑定的形式传递到子组件内部供其使用-->
+    <com1 v-bind:parentmsg="msg"></com1>
+</div>
+<script>
+    var login = {
+        template:'<h1>login</h1>'
+    }
+    Vue.component('mylogin',login)
+
+    var vm = new Vue({
+        el: '#app',   // el 绑定到id为app的元素
+        data: {   //data 属性，存放的是放到 el 中的数据
+            msg:"父组件中的消息"
+        },
+        methods: { //方法定义在这里
+
+        },
+        components:{
+            //把login引入 Vue 对象内，这样在对象内可以用 login 标签使用它
+            login:login,
+            com1:{
+                //下句报错， msg not defined，
+                // 经验证子组件不能像JS一样去父组件找
+                // template:'<h1>这是子组件---{{msg}}</h1>'
+
+                data(){
+                    return{
+                        //  子组件自有的数据，可被重新赋值。
+                        msg:'子组件的数据'
+                    }
+                },
+                template:"<h1>这是子组件 <br>" +
+                        "{{msg}}<br>"+
+                    "{{parentmsg}}</h1>",
+
+                //props 是 promises 的缩写， 组件中所有 props 中的数据，都是通过 父组件 传递来的。
+                //props 中的数据都是只读的，无法重新赋值
+                //把父组件传递来的parentmsg 属性现在 props 数组中定义一下，才能使用这个数据
+                props:["parentmsg"]
+            }
+        }
+    })
+</script>
+</body>
+</html>

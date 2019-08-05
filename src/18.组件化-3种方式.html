@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../vue.js"></script>
+</head>
+<body>
+<div id="app">
+    <h3>组件的出现，是为了拆分Vue实例的代码量的，能够让我们以不同的组件，划分不同的功能模块，将来需要什么功能，就调用相应的组件即可。</h3>
+    <h3>模块化：从代码逻辑角度进行划分，方便代码分层开发，保证每个功能模块的职能单一</h3>
+    <h3>组件化：从UI界面的角度进行划分，方便UI组件的复用</h3>
+    <br>
+    <h3>如果要使用组件，直接把组件名用 HTML标签 的形式引入页面即可</h3>
+    <h3>PS:Vue.component时用驼峰命名法的组件的话，使用时要把大写的驼峰字母改小写，两个单词间用'-'连接；直接写驼峰标签名会报错</h3>
+    <h3>注册时没用驼峰命名法可以直接用</h3>
+<!--    <myCom1></myCom1>-->
+    <my-com1></my-com1>
+    <mycom2> </mycom2>
+    <mycom3></mycom3>
+
+    <mycom4></mycom4>
+
+    <h1 style="color: red;">下面是私有组件</h1>
+    <private></private>
+    <extern-private></extern-private>
+</div>
+<!--下面这个 template 元素是不显示的，调用时才显示-->
+<template id="tmp1">
+    <div>
+        <h2>这是通过 template 元素，在外部定义的组件结构，这个方式，有代码提示，也能高亮</h2>
+        <h2>就挺好用的</h2>
+        <h2>全局组件的意思是，不止 #app 能用，别的Vue实例也能用</h2>
+    </div>
+</template>
+
+<template id="extPri">
+    <h3>这是外部定义的私有组件</h3>
+</template>
+
+<script>
+    //1.Vue.extend() + Vue.conponent()定义组件
+    //1.1 使用 Vue.extend(模板) 来创建全局的组件，方法返回一个模板对象
+    var com1 = Vue.extend({
+        template:"<h3>这是用 Vue.extend 创建的组件</h3>"
+        //通过template 属性指定了组件要展示的 HTML结构
+    })
+    //1.2 使用 Vue.component(组件名， 创建出来的组件的模板对象)
+    //将来引用时，就是以标签形式用组件名引用该组件的
+    Vue.component('myCom1', com1)
+    Vue.component('mycom2', com1)
+
+
+    //2.不用 Vue.extend({}),直接在 Vue.component(name,template) 第二参数给一个 template 对象
+    //记住，一个 template 只能有1个根元素，也就是说不能并列写2个及以上的元素
+    Vue.component('mycom3',{
+        template: '<h3>这是直接用 Vue.component 创建出来的组件</h3>'
+    })
+
+
+    //3.在被控制的 #app 外，使用 template 元素，定义组建的 HTML 模板
+    //这样定义的好处是，代码好写，有正常缩进、提示、高亮等
+    Vue.component('mycom4',{
+        template:'#tmp1'
+    })
+
+
+    //当然，有全局组件，自然也有私有组件，在实例内部定义即可
+    var vm = new Vue({
+        el: '#app',   // el 绑定到id为app的元素
+        data: {   //data 属性，存放的是放到 el 中的数据
+
+        },
+        methods: { //方法定义在这里
+
+        },
+        components:{
+            private:{
+                template:'<h2>这是私有的 private 组件</h2>'
+            },
+            externPrivate:{
+                template:'#extPri'
+            }
+        }
+    })
+</script>
+</body>
+</html>

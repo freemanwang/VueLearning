@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../vue.js"></script>
+</head>
+<body>
+
+<div id="app">
+    <input type="button" value="跑" @click="run">
+    <input type="button" value="停" @click="stop">
+
+    <h4 v-text="msg"></h4>
+</div>
+<script>
+//在vm实例中，如果想获取data中的数据，或者想调用methods中的方法，必须通过
+//this.数据属性名  或  this.方法名  来进行访问。
+//这里的this关键字表示的就是我们 new 出来的 vm 实例对象
+    var vm = new Vue({
+        el:'#app',
+        data:{
+            msg: '我有一只小毛驴呀从来也不骑',
+            intervalId:null
+        },
+        methods:{
+
+            run:function () {
+                if (this.intervalId != null){
+                    return
+                }
+                //()=> 是匿名函数，即后面{}内是函数体，然后400ms执行一次
+                this.intervalId = setInterval(()=>{
+                    // console.log(this.meg)
+                    var start = this.msg.substring(0,1)
+                    var end = this.msg.substring(1)
+                    this.msg = end + start
+                    //
+                },250)
+            },
+            //函数也可以这么写
+            stop(){
+                clearInterval(this.intervalId)
+                this.intervalId = null
+            }
+
+        }
+
+    })
+
+</script>
+</body>
+</html>

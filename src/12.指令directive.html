@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../vue.js"></script>
+</head>
+<body>
+<div id="app">
+    <span>指令里写死的颜色</span>
+    <h1 id="h11" v-blue>这是一个大大大的标题</h1>
+
+
+    <span>参数写死的颜色</span>
+    <h1 id="h12" v-color="'red'">这是一个大大大的标题</h1>
+
+
+    <span>根据传入参数指定颜色</span>
+    <h1 id="h13" v-colorarg>这是一个大大大的标题</h1>
+    <input type="text" v-model="color">
+</div>
+</body>
+<script>
+    /*    全局指令，用Vue.directive(id, function|object)
+          局部指令，在Vue对象里用directives:{}
+          PS:如果只写在bind和update中（这两个用的多），可以直接写成
+                Vue.directive(id,function)
+                这样的效果是，等价于把function在bind和update中各写一次
+
+     */
+    Vue.directive('color',{
+        bind:function (el,binding) {
+            /*
+         钩子函数的参数：
+             el：指令所绑定的元素，可以用来直接操作 DOM 。
+             binding：一个对象，包含以下属性：
+                 name：指令名，不包括 v- 前缀。
+                 value：指令的绑定值，例如：v-my-directive="1 + 1" 中，绑定值为 2。
+                 expression：字符串形式的指令表达式。例如 v-my-directive="1 + 1" 中，表达式为 "1 + 1"。
+                 oldValue：指令绑定的前一个值，仅在 update 和 componentUpdated 钩子中可用。无论值是否改变都可用。
+                 arg：传给指令的参数，可选。例如 v-my-directive:foo 中，参数为 "foo"。
+                 modifiers：一个包含修饰符的对象。例如：v-my-directive.foo.bar 中，修饰符对象为 { foo: true, bar: true }。
+            * */
+            el.style.color = binding.value
+        }
+    })
+
+    Vue.directive('blue',function (el) {
+        el.style.color = 'blue'
+    })
+
+    var vm = new Vue({
+        el: '#app',   // el 绑定到id为app的元素
+        data: {   //data 属性，存放的是放到 el 中的数据
+            color:''
+        },
+        methods: { //方法定义在这里
+
+        },
+        directives:{
+            'colorarg':{
+                update:function(el){
+                    if (this.color){
+                        el.style.color = this.color
+                    }
+                }
+            }
+
+        }
+    })
+</script>
+</html>

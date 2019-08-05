@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../vue.js"></script>
+    <script src="../vue-router-3.0.6.js"></script>
+    <style>
+        .header{
+            background-color: orange;
+            height: 80px;
+        }
+        html,body,h1{
+            margin: 0;
+            padding: 0;
+        }
+        .container{
+            display: flex;
+            height: 500px;
+        }
+        .left{
+            background: lightgreen;
+            flex: 2;
+        }
+        .main{
+            background-color: lightpink;
+            flex: 8;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+<!--    给 router-view 添加 name 属性,匹配到路径后会去相应的 components 里找 名字匹配的组件-->
+    <router-view></router-view>
+    <div class="container">
+        <router-view name="left"></router-view>
+        <router-view name="main"></router-view>
+    </div>
+
+</div>
+<script>
+    var header = {
+        template:"<h1 class='header'>Header头部区域</h1>"
+    }
+    var leftBox = {
+        template:"<h1 class='left'>left侧边栏区域</h1>"
+    }
+    var mainBox = {
+        template:"<h1 class='main'>main主体区域</h1>"
+    }
+
+    var router = new VueRouter({
+        routes:[
+            {path:'/',components:{
+                default:header,
+                    left:leftBox,
+                    main:mainBox
+                }},
+        ]
+    })
+
+    var vm = new Vue({
+        el: '#app',   // el 绑定到id为app的元素
+        data: {   //data 属性，存放的是放到 el 中的数据
+
+        },
+        methods: { //方法定义在这里
+
+        },
+        router
+    })
+</script>
+</body>
+</html>

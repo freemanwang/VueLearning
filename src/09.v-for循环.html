@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../vue.js"></script>
+</head>
+<body>
+<div id="app">
+    <!--想遍历数组，可用 v-for 循环-->
+    <!-- 单个参数时，遍历元素-->
+    <p v-for="item in list">{{ item }}</p>
+    <!--2个参数时，后面参数为元素的索引值-->
+    <p v-for="(item, i) in list">索引值：{{i}},元素{{ item }}</p>
+
+    <!--输出键值对数组时,第一个-->
+    <p v-for="person in people">Id:{{person.id}},Name:{{person.name}}</p>
+    <p v-for="(person, i) in people">Index:{{i}},Id:{{person.id}},Name:{{person.name}}</p>
+
+
+<!--    v-for可以遍历数组、对象，甚至还可以是数字，类似range(n),但从0开始-->
+    <p v-for="i in 10">这是第{{i}}次</p>
+
+<!--    key的关键性-->
+<!--    在组件循环时，必须设置key值（否则无法有效标识各组件）-->
+<!--    key的绑定，通过  v-bind:key="XX" 来设置，也可以简写  :key="XX"-->
+<!--    注意：v-for 循环的时候，key 属性只能用 number 或 string-->
+<!--    注意：key 在使用的时候，必须使用v-bind 属性绑定的形式，执行key 值-->
+<!--    key 值可以标识数据的唯一性，不设置key值有时数据项发生变动，有可能有影响-->
+<!--    在组件中使用v-for循环时，或特殊情况时，如果v-for有问题，必须同时指定唯一的 number/string 类型的key值-->
+
+</div>
+<script>
+    var vm = new Vue({
+        el: '#app',   // el 绑定到id为app的元素
+        data: {   //data 属性，存放的是放到 el 中的数据
+            list:[1,2,3,4,5],
+            people:[
+                {id:1, name:'Alice'},
+                {id:2, name:'Bob'},
+                {id:3, name:'Carol'},
+                {id:4, name:'David'},
+            ]
+        },
+        methods: { //方法定义在这里
+
+        }
+    })
+</script>
+</body>
+</html>
